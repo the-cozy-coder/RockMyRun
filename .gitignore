@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments (highly recommended to ignore)
+venv/
+.venv/
+env/
+ENV/
+
+# VS Code specific
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Environment variables / Secrets
+.env
+.venv
+*.secrets
+
+# Distribution / Build
+dist/
+build/
+*.egg-info/
+*.cache
+
+# test files - maybe save them later
+tests/
+
+# uv specific
+.uv/
+.venv/
+
+# Jupyter Notebooks &  checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# don't save data
+*.db
+
+

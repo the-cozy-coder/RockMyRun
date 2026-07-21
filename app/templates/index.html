@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RockMyRun - Music Search</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="running-icon">🏃‍♂️</div>
+        <h1>RockMyRun</h1>
+        <p class="description">Find the perfect music for your runs using AI-powered search</p>
+        <form id="searchForm"  action="/search" method="post">
+            <div class="form-group">
+                <label for="playlists">Your Playlists - indicate which ones to use to influence your playlist</label>
+                <div class="checkbox-group">
+                {% if user_playlists %}
+                    {% for playlist in user_playlists %}
+                        <label><input type="checkbox" name="playlist_ids" value="{{ playlist.id }}"> {{ playlist.name }}</label>
+                    {% endfor %}
+                {% else %}
+                    <span style="color: #888;">No playlists found or not connected to Spotify.</span>
+                {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="seed_tracks">Seed your Playlist with your favorite songs (comma-separated)</label>
+                <input type="text" id="seed_tracks" name="seed_tracks" placeholder="e.g. 'Blinding Lights, Don't Start Now, Levitating'">
+            </div>
+            <button type="submit">Find my music</button>
+        </form>
+        <div class="running-icon">🎵</div>
+
+
+<!-- 
+
+
+        <div class="container-inner">
+        <div class="running-icon">🎵</div>
+        <h1>Design Your Playlist Vibe</h1>
+        <p class="subtitle">Shape how your music's energy, hype, and motivation change over 30 minutes</p>
+
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ul>
+                <li><strong>Drag points</strong> on the lines to adjust the vibe levels</li>
+                <li><strong>Note:</strong> All three levels (Hype, Energetic, Motivation) always sum to 100% at each time point</li>
+                <li>When you increase one level, the others automatically decrease proportionally</li>
+            </ul>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ff6b6b;"></div>
+                <span>Hype Level</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #4ecdc4;"></div>
+                <span>Energetic Level</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #45b7d1;"></div>
+                <span>Motivation Level</span>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="vibeChart"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="playlistName">Playlist Name</label>
+                <input type="text" id="playlistName" placeholder="My Perfect Running Mix" value="My Perfect Running Mix">
+            </div>
+            <div class="control-group">
+                <label for="totalTime">Total Duration (minutes)</label>
+                <input type="text" id="totalTime" value="30">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="generatePlaylist()">🎵 Generate Playlist</button>
+            <!-- <a href="/" style="text-decoration: none;"><button class="secondary-btn">⬅️ Back to Search</button></a>
+            <a href="/vibe_profiles" style="text-decoration: none;"><button class="secondary-btn">📁 Load Profiles</button></a> -->
+        </div>
+        </div>
+    </div> -->
+
+    <script>
+        let hypeData =       [90, 75, 45,  5,  5,  0]//, 45, 35, 25, 20, 15];
+        let energeticData =  [10, 20, 50, 90, 35, 20]//, 35, 30, 25, 20, 15];
+        let motivationData = [0,   5,  5,  5, 60, 80]//, 20, 35, 50, 60, 70];
+
+        const ctx = document.getElementById('vibeChart').getContext('2d');
+        let chart = null;
+        let selectedPoint = null;
+
+        function createChart() {
+            const timeLabels = Array.from({length: 6}, (_, i) => `${Math.round((i + 1) * 3)}min`);
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [{
+                        label: 'Hype',
+                        data: hypeData,
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointHoverRadius: 12,
+                        pointBackgroundColor: '#ff6b6b',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Energetic',
+                        data: energeticData,
+                        borderColor: '#4ecdc4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointHoverRadius: 12,
+                        pointBackgroundColor: '#4ecdc4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Motivation',
+                        data: motivationData,
+                        borderColor: '#45b7d1',
+                        backgroundColor: 'rgba(69, 183, 209, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointHoverRadius: 12,
+                        pointBackgroundColor: '#45b7d1',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Hide legend since we have custom one
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.y}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Intensity Level (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time Progress'
+                            }
+                        }
+                    },
+                    onClick: function(event, elements) {
+                        if (elements.length > 0) {
+                            const element = elements[0];
+                            selectedPoint = {
+                                datasetIndex: element.datasetIndex,
+                                index: element.index
+                            };
+                        }
+                    }
+                }
+            });
+
+            // Add drag functionality
+            let isDragging = false;
+            let dragDataset = null;
+            let dragIndex = null;
+
+            document.getElementById('vibeChart').addEventListener('mousedown', function(evt) {
+                const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+                if (points.length > 0) {
+                    isDragging = true;
+                    dragDataset = points[0].datasetIndex;
+                    dragIndex = points[0].index;
+                }
+            });
+
+            document.addEventListener('mousemove', function(evt) {
+                if (isDragging && dragDataset !== null && dragIndex !== null) {
+                    const rect = chart.canvas.getBoundingClientRect();
+                    const y = evt.clientY - rect.top;
+                    const chartArea = chart.chartArea;
+                    const yScale = chart.scales.y;
+
+                    if (y >= chartArea.top && y <= chartArea.bottom) {
+                        const newValue = Math.round(yScale.getValueForPixel(y));
+                        const clampedValue = Math.max(0, Math.min(100, newValue));
+
+                        // Adjust all three values to sum to 100
+                        let arrays = [hypeData, energeticData, motivationData];
+                        let oldValues = arrays.map(arr => arr[dragIndex]);
+                        let newValues = [...oldValues];
+                        newValues[dragDataset] = clampedValue;
+
+                        let remaining = 100 - clampedValue;
+                        let otherIndices = [0, 1, 2].filter(i => i !== dragDataset);
+                        let totalOther = oldValues[otherIndices[0]] + oldValues[otherIndices[1]];
+
+                        if (totalOther > 0) {
+                            newValues[otherIndices[0]] = Math.round(remaining * (oldValues[otherIndices[0]] / totalOther));
+                            newValues[otherIndices[1]] = Math.round(remaining * (oldValues[otherIndices[1]] / totalOther));
+                        } else {
+                            newValues[otherIndices[0]] = Math.round(remaining / 2);
+                            newValues[otherIndices[1]] = Math.round(remaining / 2);
+                        }
+
+                        // Update the arrays
+                        hypeData[dragIndex] = newValues[0];
+                        energeticData[dragIndex] = newValues[1];
+                        motivationData[dragIndex] = newValues[2];
+
+                        chart.update();
+                    }
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+                dragDataset = null;
+                dragIndex = null;
+            });
+        }
+
+
+        function getSearchPayload() {
+            const form = document.getElementById('searchForm');
+            const formData = new FormData(form);
+            const payload = {};
+            const selectedGenres = formData.getAll('genres');
+            if (selectedGenres.length > 0) {
+                payload.genres = selectedGenres;
+            }
+            const selectedPlaylists = formData.getAll('playlist_ids');
+            if (selectedPlaylists.length > 0) {
+                payload.playlist_ids = selectedPlaylists;
+            }
+            const seedTracks = formData.get('seed_tracks');
+            if (seedTracks) {
+                payload.seed_tracks = seedTracks;
+            }
+            return payload;
+        }
+
+        function buildQueryString(payload) {
+            const params = new URLSearchParams();
+            Object.entries(payload).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(item => params.append(key, item));
+                } else if (value !== undefined && value !== null && value !== '') {
+                    params.append(key, value);
+                }
+            });
+            return params.toString();
+        }
+
+        function submitSearchPayload(targetUrl) {
+            const payload = getSearchPayload();
+
+            fetch(targetUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error submitting search payload:', error);
+                alert('Failed to generate playlist from search inputs.');
+            });
+        }
+
+        function generatePlaylist() {
+            const playlistName = document.getElementById('playlistName').value;
+            
+            // First save the profile temporarily
+            const vibeProfile = {
+                name: playlistName,
+                duration: parseInt(document.getElementById('totalTime').value),
+                hype_data: hypeData,
+                energetic_data: energeticData,
+                motivation_data: motivationData
+            };
+
+            fetch('/save_vibe_profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(vibeProfile)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const payload = getSearchPayload();
+                    const queryString = buildQueryString(payload);
+                    const targetUrl = `/generate_playlist/${data.profile_id}${queryString ? `?${queryString}` : ''}`;
+                    window.location.href = targetUrl;
+                } else {
+                    alert('Failed to save profile for playlist generation.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error generating playlist.');
+            });
+        }
+       
+        // Initialize chart when page loads
+        document.addEventListener('DOMContentLoaded', createChart);
+    </script>
+</body>
+</html>

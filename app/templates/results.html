@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RockMyRun - Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> 
+</head>
+<body>
+    <div class="container">
+        <div class="running-icon">🎵</div>
+        <h1>Your Perfect Running Playlist</h1>
+
+        <div class="query-info">
+            <strong>Search Criteria:</strong>
+            <!-- {% if genres %}Genres: {{ genres|join(', ') }}{% endif %} -->
+            {% if search_results.artists %} | Artists: {{ search_results.artists|join(', ') }}{% endif %}
+        </div>
+
+        <!-- {% if all_songs %}
+        <h2 style="color: #17a2b8; margin-top: 40px; margin-bottom: 20px;">🤖 AI Recommendations from Rock my Run</h2>
+        <ul class="results-list">
+            {% for result in all_songs %}
+            <li class="result-item">
+                <div class="track-title">{{ result.title }}</div>
+                <div class="track-artist">by {{ result.artist }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if not all_songs %}
+        <div class="no-results">
+            <p>No tracks found for your search. Try different keywords or adjust your preferences!</p>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center;">
+            <a href="/" class="back-button">🔙 Search Again</a>
+        </div>
+    </div> -->
+</body>
+</html>

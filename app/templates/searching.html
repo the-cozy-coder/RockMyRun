@@ -1,0 +1,36 @@
+<h1>Building Your Playlist...</h1>
+
+<div class="spinner"></div>
+
+<p id="job-message">This may take a few seconds.</p>
+
+<script>
+
+const jobId = "{{ job_id }}";
+console.log("Job ID:", jobId);
+
+
+async function checkStatus() {
+
+    const response = await fetch(
+        `/status/${jobId}`
+    );
+
+    const data = await response.json();
+
+
+    document.getElementById("job-message")
+        .innerText = data.message;
+
+
+    if (data.status === "complete") {
+
+        window.location.href =
+            `/results/${jobId}`;
+    }
+}
+
+
+setInterval(checkStatus, 2000);
+
+</script>
