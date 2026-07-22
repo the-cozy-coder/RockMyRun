@@ -14,6 +14,8 @@ def get_all_songs(limit=None):
 
 def get_songs_by_spotify_id(sids: list[str]) -> list[Song]:
     """Get songs from local database matching Spotify IDs."""
+    print("++Inside Get songs by spotify id++")
+    print(f'{sids=}')
 
     if not sids:
         return []
@@ -53,8 +55,10 @@ def save_song(SongInfo):
     db.session.commit()
 
 def get_complete_song_data(sids:list):
-
+    print("++INSIDE get_complete_song_data++")
     existing_ids = [song.spotify_id for song in get_songs_by_spotify_id(sids)]
+    print(f"{existing_ids=}")
+    print(f"{sids=}")
     songs_to_add = tuple(set(sids) - set(existing_ids))
 
     print(songs_to_add)
@@ -74,5 +78,10 @@ def get_complete_song_data(sids:list):
     return complete_data
             
 def add_songs_to_database(spotify_ids: tuple):
-    pass
+    print("GETTING SONG DATA--")
+    song_data = get_complete_song_data(spotify_ids)
+    print(song_data)
+    print("**************************************")
+    print(f'adding songs to database {spotify_ids}')
+    return 10
 
