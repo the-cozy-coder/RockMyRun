@@ -41,23 +41,3 @@ async function checkStatus() {
 setInterval(checkStatus, 2000);
 
 </script>
-
-
-
-async function checkStatus() {
-    try {
-        const response = await fetch(`/status/${jobId}`);
-        const data = await response.json();
-
-        document.getElementById("job-message").innerText =
-            data.message || "";
-
-        if (data.status === "complete") {
-            window.location.href = `/results/${jobId}`;
-        } else if (data.status === "error") {
-            window.location.href = `/error/${jobId}`;
-        }
-    } catch (err) {
-        window.location.href = `/error/network`;
-    }
-}
