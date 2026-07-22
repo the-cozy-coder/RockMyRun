@@ -19,7 +19,6 @@ def create_app():
 
     from .models import Songs
     from .routes import main
-
     app.register_blueprint(main)
 
     return app

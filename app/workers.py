@@ -32,7 +32,6 @@ def run_search(app, job_id, playlist_ids, playlists):
             print(str(e))
             jobs[job_id]["status"] = "error"
             jobs[job_id]["message"] = str(e)
-            jobs[job_id]["status"] = "complete"
 
         finally:
             db.session.remove()

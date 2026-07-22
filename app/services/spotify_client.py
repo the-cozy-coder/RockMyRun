@@ -43,6 +43,4 @@ class SpotifyClient:
         """Get a list of Spotify track IDs from a playlist."""
         results = self.sp_client.playlist_tracks(playlist_id)
         song_ids = [song['item']['id'] for song in results.get('items', [])]
-        print("****************")
-        print(song_ids)
         return song_ids
