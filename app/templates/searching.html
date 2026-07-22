@@ -27,7 +27,13 @@ async function checkStatus() {
 
         window.location.href =
             `/results/${jobId}`;
-    }
+    } else if (data.status === "error") {
+
+    const msg = document.getElementById("job-message");
+
+    msg.textContent = data.message || "An error occurred.";
+    msg.classList.add("error");
+
 }
 
 
