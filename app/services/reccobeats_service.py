@@ -16,6 +16,7 @@ def format_track_string(spotify_ids: list, batch_size: int = 30) -> str:
         else:
             track_string = "&ids=".join(batch_ids)
         track_strings.append(track_string)
+    return track_strings
 
 @lru_cache(maxsize=2000)
 def get_track_info(spotify_ids: tuple[str])->dict:
@@ -43,12 +44,10 @@ def get_track_info(spotify_ids: tuple[str])->dict:
         >>> tracks[0]["title"]
         'Something Just Like This'
     """
-
     content = []
     for track_string in format_track_string(list(spotify_ids)):
         url = "https://api.reccobeats.com/v1/track?ids=" + track_string
         headers = {"Accept": "application/json"}
-
         response = REQUEST_SESSION.get(url, headers=headers, timeout=HTTP_TIMEOUT)
         response.raise_for_status()
         content.extend(response.json().get("content", []))
