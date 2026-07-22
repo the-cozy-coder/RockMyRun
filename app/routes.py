@@ -16,7 +16,7 @@ from .jobs import jobs
 
 main = Blueprint("main", __name__)
 
-@main.route("/test-song-db")
+@main.route("/song-db")
 def test_song_db():
 
     songs = get_all_songs(limit=50)
@@ -28,7 +28,7 @@ def test_song_db():
         ]
     )
 
-@main.route("/test-vibe-db")
+@main.route("/vibe-db")
 def test_vibe_db():
 
     vibes = get_all_vibe_profiles(limit=5)

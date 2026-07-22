@@ -14,8 +14,6 @@ def get_all_songs(limit=None):
 
 def get_songs_by_spotify_id(sids: list[str]) -> list[Song]:
     """Get songs from local database matching Spotify IDs."""
-    print("++Inside Get songs by spotify id++")
-    print(f'{sids=}')
 
     if not sids:
         return []
@@ -55,19 +53,14 @@ def save_song(SongInfo):
     db.session.commit()
 
 def get_complete_song_data(sids:list):
-    print("++INSIDE get_complete_song_data++")
     existing_ids = [song.spotify_id for song in get_songs_by_spotify_id(sids)]
-    print(f"{existing_ids=}")
-    print(f"{sids=}")
     songs_to_add = tuple(set(sids) - set(existing_ids))
-
-    print(songs_to_add)
-    #NOTE Some songs will have no reccobeats info - if this is the case nothing will be returned
-    # account for that!!
+    if len(songs_to_add) == 0:
+        return {}
 
     song_info = get_track_info(songs_to_add)
-
     audio_info = get_track_audio_details(songs_to_add)
+
     song_info_dict = {x.get("href").split('/')[-1]: x for x in song_info}
     audio_info_dict = {x.get("href").split('/')[-1]: x for x in audio_info}
 
@@ -78,10 +71,9 @@ def get_complete_song_data(sids:list):
     return complete_data
             
 def add_songs_to_database(spotify_ids: tuple):
-    print("GETTING SONG DATA--")
     song_data = get_complete_song_data(spotify_ids)
-    print(song_data)
-    print("**************************************")
-    print(f'adding songs to database {spotify_ids}')
+    # TODO : process vide values
+    # TODO: Create song objects
+    # TODO: add songs to the database
     return 10
 
