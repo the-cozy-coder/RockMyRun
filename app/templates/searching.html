@@ -12,31 +12,52 @@ console.log("Job ID:", jobId);
 
 async function checkStatus() {
 
-    const response = await fetch(
-        `/status/${jobId}`
-    );
+    try{ 
+        const response = await fetch(
+            `/status/${jobId}`
+        );
 
-    const data = await response.json();
-
-
-    document.getElementById("job-message")
-        .innerText = data.message;
+        const data = await response.json();
 
 
-    if (data.status === "complete") {
+        document.getElementById("job-message")
+            .innerText = data.message;
 
-        window.location.href =
-            `/results/${jobId}`;
-    } else if (data.status === "error") {
 
-    const msg = document.getElementById("job-message");
+        if (data.status === "complete") {
 
-    msg.textContent = data.message || "An error occurred.";
-    msg.classList.add("error");
+            window.location.href =
+                `/results/${jobId}`;
+        } else if (data.status === "error") {
 
+            window.location.href = `/error/${jobId}`;
+
+        } 
+    } catch (err) {
+        window.location.href = `/error/network`;
+    }
 }
-
 
 setInterval(checkStatus, 2000);
 
 </script>
+
+
+
+async function checkStatus() {
+    try {
+        const response = await fetch(`/status/${jobId}`);
+        const data = await response.json();
+
+        document.getElementById("job-message").innerText =
+            data.message || "";
+
+        if (data.status === "complete") {
+            window.location.href = `/results/${jobId}`;
+        } else if (data.status === "error") {
+            window.location.href = `/error/${jobId}`;
+        }
+    } catch (err) {
+        window.location.href = `/error/network`;
+    }
+}

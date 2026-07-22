@@ -98,3 +98,16 @@ def results(job_id):
         # results=jobs[job_id]["results"]
         search_results = {"artists": ['artist1', 'artist2', 'artist3']}
     )
+
+@main.route("/error/<job_id>")
+def error(job_id):
+
+    job = jobs.get(job_id)
+
+    if not job:
+        return "Job not found", 404
+
+    return render_template(
+        "error.html",
+        error_message=job.get("message", "An unknown error occurred.")
+    )
