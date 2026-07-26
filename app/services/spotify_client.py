@@ -26,10 +26,10 @@ class SpotifyClient:
         ))
         return sp
 
-    def search_spotify_track_id(self, title, artist):
+    def search_spotify_track_id(self, title, artist, limit:int = 10):
         """Search for a Spotify track ID given a title and artist."""
         results = self.sp_client.search(q=f'track:{title} artist:{artist}', 
-                                        limit=10,
+                                        limit=limit,
                                         type='track')
         track_id = [x.get('id') for x in results['tracks']['items']]
         return track_id

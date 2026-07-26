@@ -4,10 +4,10 @@ from flask import current_app
 from flask import Flask, render_template, request, jsonify, session, redirect
 from .models.Songs import Song
 from .models.VibeProfiles import VibeProfile
-from .services.song_service import get_all_songs
+from .services.song_service import get_all_songs, get_result_data
 from .services.vibe_service import get_all_vibe_profiles
 from .services.spotify_service import get_user_playlists
-from .workers import start_processing_playlists
+from .workers import start_processing_playlists, start_processing_recommendations
 from uuid import uuid4
 # Dev librariews
 import time
@@ -23,7 +23,7 @@ def test_song_db():
 
     return "<br>".join(
         [
-            f"{song.title} - {song.artist} - {song.spotify_id}"
+            f"{song.title} - {song.artist} - {song.spotify_id} - {song.hype_score} - {song.reccobeats_id}"
             for song in songs
         ]
     )
@@ -71,12 +71,12 @@ def search():
     # print(job_id, selected_playlist_ids, session['user_playlists'])
     # print(jobs)
     start_processing_playlists(job_id, selected_playlist_ids, session['user_playlists'])
+    start_processing_recommendations(job_id, query)
 
     return redirect(f"/searching/{job_id}")
 
 @main.route("/searching/<job_id>")
 def searching(job_id):
-    print(jobs)
     return render_template(
         "searching.html",
         job_id=job_id
@@ -93,10 +93,16 @@ def status(job_id):
 @main.route("/results/<job_id>")
 def results(job_id):
 
+    print(get_result_data(jobs[job_id]["results"]))
+    search_results = {
+        'artists': ['artist1aa', 'artist2aaa', 'artist3aaa'],
+        'all_songs': get_result_data(jobs[job_id]["results"]),
+        'total_results': len(jobs[job_id]["results"]),
+    }
+
     return render_template(
         "results.html",
-        # results=jobs[job_id]["results"]
-        search_results = {"artists": ['artist1', 'artist2', 'artist3']}
+        search_results = search_results
     )
 
 @main.route("/error/<job_id>")

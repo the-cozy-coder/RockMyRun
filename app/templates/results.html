@@ -17,10 +17,10 @@
             {% if search_results.artists %} | Artists: {{ search_results.artists|join(', ') }}{% endif %}
         </div>
 
-        <!-- {% if all_songs %}
+        {% if search_results.all_songs %}
         <h2 style="color: #17a2b8; margin-top: 40px; margin-bottom: 20px;">🤖 AI Recommendations from Rock my Run</h2>
         <ul class="results-list">
-            {% for result in all_songs %}
+            {% for result in search_results.all_songs %}
             <li class="result-item">
                 <div class="track-title">{{ result.title }}</div>
                 <div class="track-artist">by {{ result.artist }}</div>
@@ -38,6 +38,6 @@
         <div style="text-align: center;">
             <a href="/" class="back-button">🔙 Search Again</a>
         </div>
-    </div> -->
+    </div>
 </body>
 </html>

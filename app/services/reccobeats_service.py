@@ -3,6 +3,8 @@ import requests
 
 from ..models.Songs import Song
 
+from pprint import pprint
+
 
 HTTP_TIMEOUT = (2, 5)
 REQUEST_SESSION = requests.Session()
@@ -44,14 +46,30 @@ def get_track_info(spotify_ids: tuple[str])->dict:
         >>> tracks[0]["title"]
         'Something Just Like This'
     """
-    content = []
+    song_data = []
     for track_string in format_track_string(list(spotify_ids)):
         url = "https://api.reccobeats.com/v1/track?ids=" + track_string
         headers = {"Accept": "application/json"}
         response = REQUEST_SESSION.get(url, headers=headers, timeout=HTTP_TIMEOUT)
+        content = response.json().get('content', [])
+
+
+        for item in content:
+        # Error-proof artist extraction
+            artists = item.get('artists')
+            if artists and isinstance(artists, list) and len(artists) > 0:
+                artist_name = artists[0].get('name', 'artist unknown')
+            else:
+                artist_name = 'artist unknown'
+
+            song_data.append({"title": item['trackTitle'],
+                              "artist": artist_name,
+                              'durationMs': item.get('durationMs', 0),
+                              "reccobeats_id": item.get('id'),
+                              "spotify_id": item.get('href', '').split('/')[-1]
+                            })
         response.raise_for_status()
-        content.extend(response.json().get("content", []))
-    return content
+    return song_data
 
 @lru_cache(maxsize=2000)
 def get_track_audio_details(spotify_ids: tuple[str]) -> dict:

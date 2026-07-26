@@ -3,21 +3,21 @@ from typing import Optional
 
 class SongInfo(BaseModel):
     spotify_id: str
-    reccobeats_id: Optional[str]
-    title: Optional[str]
-    artist: Optional[str]
-    acousticness: Optional[float]
-    danceability: Optional[float]
-    energy: Optional[float]
-    instrumentalness: Optional[float]
-    key: Optional[int]
-    liveness: Optional[float]
-    loudness: Optional[float]
-    mode: Optional[int]
-    speechiness: Optional[float]
-    tempo: Optional[float]
-    valence: Optional[float]
-    durationMs: Optional[int]
-    hype_score: Optional[float]
-    motivation_score: Optional[float]
-    energy_score: Optional[float]
+    reccobeats_id: Optional[str] = None
+    title: Optional[str] = None
+    artist: Optional[str] = None
+    acousticness: Optional[float] = None
+    danceability: Optional[float] = None
+    energy: Optional[float] = None
+    instrumentalness: Optional[float] = None
+    key: Optional[int] = None
+    liveness: Optional[float] = None
+    loudness: Optional[float] = None
+    mode: Optional[int] = None
+    speechiness: Optional[float] = None
+    tempo: Optional[float] = None
+    valence: Optional[float] = None
+    durationMs: Optional[int] = None
+    hype_score: Optional[float] = None
+    motivation_score: Optional[float] = None
+    energy_score: Optional[float] = None
