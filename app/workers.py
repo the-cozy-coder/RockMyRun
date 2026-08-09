@@ -51,7 +51,7 @@ def start_search_pipeline(
 ):
     app = current_app._get_current_object()
     if len(seeds) == 0:
-        seeds = ['Thunder Road - Bruce Springstein']
+        seeds = 'Thunder Road - Bruce Springstein'
 
     thread = threading.Thread(
         target=run_search_pipeline,
@@ -113,7 +113,7 @@ def start_vibe_pipeline(
 ):
     app = current_app._get_current_object()
     if len(seeds) == 0:
-        seeds = ['Thunder Road - Bruce Springstein']
+        seeds = 'Thunder Road - Bruce Springstein'
 
     thread = threading.Thread(
         target=run_vibe_pipeline,
