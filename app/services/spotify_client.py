@@ -1,30 +1,53 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from pprint import pprint
+from flask import current_app
+
+# class SpotifyClient:
+#     def __init__(self, client_id, client_secret, callback):
+#         self.client_id = client_id
+#         self.client_secret = client_secret
+#         self.callback = callback
+#         self.sp_client = self.spotify_client()
+    
+#     def spotify_client(self):
+#         scopes = ("user-library-read",
+#                   "playlist-read-private",
+#                   "playlist-read-collaborative",
+#                   "playlist-modify-public",
+#                   "playlist-modify-private")
+
+
+
+#         sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+#             client_id=self.client_id,
+#             client_secret=self.client_secret,
+#             redirect_uri=self.callback,
+#             scope=scopes
+#         ))
+#         return sp
+
 
 class SpotifyClient:
-    def __init__(self, client_id, client_secret, callback):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.callback = callback
-        self.sp_client = self.spotify_client()
-    
-    def spotify_client(self):
-        scopes = ("user-library-read",
-                  "playlist-read-private",
-                  "playlist-read-collaborative",
-                  "playlist-modify-public",
-                  "playlist-modify-private")
+
+    def __init__(self, access_token):
+        self.sp_client = spotipy.Spotify(
+            auth=access_token
+        )
 
 
-
-        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            redirect_uri=self.callback,
-            scope=scopes
-        ))
-        return sp
+    def get_spotify_oauth():
+        return SpotifyOAuth(
+            client_id=current_app.config["SPOTIFY_CLIENT_ID"],
+            client_secret=current_app.config["SPOTIFY_CLIENT_SECRET"],
+            redirect_uri=current_app.config["SPOTIFY_REDIRECT_URI"],
+            scope=(
+                "user-library-read "
+                "playlist-read-private "
+                "playlist-read-collaborative "
+                "playlist-modify-public "
+                "playlist-modify-private"
+            )
+        )
 
     def search_spotify_track_id(self, title, artist, limit:int = 10):
         """Search for a Spotify track ID given a title and artist."""
