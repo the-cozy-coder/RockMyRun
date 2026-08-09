@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RockMyRun - Generated Playlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="running-icon">🎵</div>
+        <h1>{{ playlist.name }}</h1>
+        
+        <div class="playlist-info">
+            <h2>Playlist Summary</h2>
+            <p><strong>Total Duration:</strong> {{ playlist.duration }} minutes</p>
+            <p><strong>Total Songs:</strong> {{ playlist.total_songs }}</p>
+            {% if playlist.message %}
+            <p style="color: #dc3545;">{{ playlist.message }}</p>
+            {% endif %}
+        </div>
+        
+        {% if playlist.songs %}
+        <ul class="songs-list">
+            {% for item in playlist.songs %}
+            <li class="song-item">
+                <div class="song-info">
+                    <div class="song-title">{{ item.title }} by {{ item.artist }}</div>
+                    <div class="vibe-target">
+                        <strong>Target Vibe:</strong>
+                        <div class="vibe-bars">
+                            <div class="vibe-bar">
+                                <div class="vibe-fill hype" style="width: {{ item.target_vibes.hype }}%;"></div>
+                            </div>
+                            <div class="vibe-bar">
+                                <div class="vibe-fill energetic" style="width: {{ item.target_vibes.energy }}%;"></div>
+                            </div>
+                            <div class="vibe-bar">
+                                <div class="vibe-fill motivation" style="width: {{ item.target_vibes.motivation }}%;"></div>
+                            </div>
+                        </div>
+                        <small>Hype: {{ item.hype_score }}% | Energetic: {{ item.energy_score }}% | Motivation: {{ item.motivation_score }}%</small>
+                    </div>
+                </div>
+                <div class="song-timing">
+                    <div class="song-time">{{ "%.1f"|format(item.start_time) }} min</div>
+                    <div class="song-duration">({{ "%.1f"|format(item.duration) }} min)</div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-songs">
+            <p>No songs available for playlist generation.</p>
+            <p>Add songs to your database first by searching with genres and seed tracks.</p>
+        </div>
+        {% endif %}
+        
+        <div style="text-align: center;">
+            <button class="export-btn" onclick="exportPlaylist()">📤 Export Playlist</button>
+            <a href="/" class="back-button">🔙 Search Again</a>
+        </div>
+    </div>
+
+    <script>
+        function exportPlaylist() {
+            // TODO: Implement playlist export (Spotify, Apple Music, etc.)
+            alert('Playlist export coming soon! For now, you can manually create this playlist in your music app.');
+        }
+    </script>
+</body>
+</html>

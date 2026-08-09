@@ -24,14 +24,14 @@ async function checkStatus() {
             .innerText = data.message;
 
 
-        if (data.status === "complete") {
+        if (data.status === "complete_search") {
 
             window.location.href =
                 `/results/${jobId}`;
+        } else if (data.status == "complete_vibe") {
+            window.location.href = `/playlist/${jobId}`;
         } else if (data.status === "error") {
-
             window.location.href = `/error/${jobId}`;
-
         } 
     } catch (err) {
         window.location.href = `/error/network`;

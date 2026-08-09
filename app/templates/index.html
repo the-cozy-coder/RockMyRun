@@ -34,63 +34,54 @@
             </div>
             <button type="submit">Find my music</button>
         </form>
+
         <div class="running-icon">🎵</div>
-
-
-<!-- 
-
-
         <div class="container-inner">
-        <div class="running-icon">🎵</div>
-        <h1>Design Your Playlist Vibe</h1>
-        <p class="subtitle">Shape how your music's energy, hype, and motivation change over 30 minutes</p>
-
-        <div class="instructions">
-            <h3>How to use:</h3>
-            <ul>
-                <li><strong>Drag points</strong> on the lines to adjust the vibe levels</li>
-                <li><strong>Note:</strong> All three levels (Hype, Energetic, Motivation) always sum to 100% at each time point</li>
-                <li>When you increase one level, the others automatically decrease proportionally</li>
-            </ul>
-        </div>
-
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #ff6b6b;"></div>
-                <span>Hype Level</span>
+            <h1>Design Your Playlist Vibe</h1>
+            <p class="subtitle">Shape how your music's energy, hype, and motivation change over the duration of your run</p>
+            <div class="instructions">
+                <h3>How to use:</h3>
+                <ul>
+                    <li><strong>Drag points</strong> on the lines to adjust the vibe levels</li>
+                    <li><strong>Note:</strong> All three levels (Hype, Energetic, Motivation) always sum to 100% at each time point</li>
+                    <li>When you increase one level, the others automatically decrease proportionally</li>
+                </ul>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #4ecdc4;"></div>
-                <span>Energetic Level</span>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff6b6b;"></div>
+                    <span>Hype Level</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ecdc4;"></div>
+                    <span>Energetic Level</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #45b7d1;"></div>
+                    <span>Motivation Level</span>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: #45b7d1;"></div>
-                <span>Motivation Level</span>
+            <div class="chart-container">
+                <canvas id="vibeChart"></canvas>
             </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="playlistName">Playlist Name</label>
+                    <input type="text" id="playlistName" placeholder="My Perfect Running Mix" value="My Perfect Running Mix">
+                </div>
+                <div class="control-group">
+                    <label for="totalTime">Total Duration (minutes)</label>
+                    <input type="text" id="totalTime" value="30">
+                </div>
+            </div>
+
+            <button type="button" onclick="generatePlaylist()">
+                Create my playlist
+            </button>
+            <!-- </div> -->
         </div>
 
-        <div class="chart-container">
-            <canvas id="vibeChart"></canvas>
-        </div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="playlistName">Playlist Name</label>
-                <input type="text" id="playlistName" placeholder="My Perfect Running Mix" value="My Perfect Running Mix">
-            </div>
-            <div class="control-group">
-                <label for="totalTime">Total Duration (minutes)</label>
-                <input type="text" id="totalTime" value="30">
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button onclick="generatePlaylist()">🎵 Generate Playlist</button>
-            <!-- <a href="/" style="text-decoration: none;"><button class="secondary-btn">⬅️ Back to Search</button></a>
-            <a href="/vibe_profiles" style="text-decoration: none;"><button class="secondary-btn">📁 Load Profiles</button></a> -->
-        </div>
-        </div>
-    </div> -->
 
     <script>
         let hypeData =       [90, 75, 45,  5,  5,  0]//, 45, 35, 25, 20, 15];
@@ -249,7 +240,6 @@
                 dragIndex = null;
             });
         }
-
 
         function getSearchPayload() {
             const form = document.getElementById('searchForm');

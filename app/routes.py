@@ -5,9 +5,10 @@ from flask import Flask, render_template, request, jsonify, session, redirect
 from .models.Songs import Song
 from .models.VibeProfiles import VibeProfile
 from .services.song_service import get_all_songs, get_result_data
-from .services.vibe_service import get_all_vibe_profiles
+from .services.vibe_service import (get_all_vibe_profiles, save_vibe_profile, 
+                                    get_vibe_profile, generate_playlist_from_vibe)
 from .services.spotify_service import get_user_playlists
-from .workers import start_processing_playlists, start_processing_recommendations
+from .workers import start_search_pipeline, start_vibe_pipeline
 from uuid import uuid4
 # Dev librariews
 import time
@@ -58,8 +59,8 @@ def home():
 @main.route("/search", methods = ["POST"])
 def search():
 
-    query = request.form["seed_tracks"]
-    selected_playlist_ids = request.form.getlist("playlist_ids")
+    seeds = request.form["seed_tracks"]
+    playlist_ids = request.form.getlist("playlist_ids")
 
     job_id = str(uuid4())
 
@@ -68,10 +69,7 @@ def search():
         "results": None
     }
 
-    # print(job_id, selected_playlist_ids, session['user_playlists'])
-    # print(jobs)
-    start_processing_playlists(job_id, selected_playlist_ids, session['user_playlists'])
-    start_processing_recommendations(job_id, query)
+    start_search_pipeline(job_id, playlist_ids, seeds)
 
     return redirect(f"/searching/{job_id}")
 
@@ -84,7 +82,6 @@ def searching(job_id):
 
 @main.route("/status/<job_id>")
 def status(job_id):
-    print(jobs[job_id]["status"])
     return {
         "status": jobs[job_id]["status"],
         "message": jobs[job_id]["message"]
@@ -93,7 +90,6 @@ def status(job_id):
 @main.route("/results/<job_id>")
 def results(job_id):
 
-    print(get_result_data(jobs[job_id]["results"]))
     search_results = {
         'artists': ['artist1aa', 'artist2aaa', 'artist3aaa'],
         'all_songs': get_result_data(jobs[job_id]["results"]),
@@ -117,3 +113,37 @@ def error(job_id):
         "error.html",
         error_message=job.get("message", "An unknown error occurred.")
     )
+
+
+@main.route('/save_vibe_profile', methods=['POST'])
+def save_vibe_profile_route():
+    """Persist a vibe profile sent by the front-end and return the new profile id."""
+    data = request.get_json()
+    response = save_vibe_profile(data)
+    return response
+
+
+@main.route("/generate_playlist/<int:profile_id>", methods=['GET', 'POST'])
+def VibeSearch(profile_id):
+
+    vibe_profile = get_vibe_profile(profile_id)
+
+    seed_tracks = request.args.get("seed_tracks", "")
+    playlist_ids = request.args.getlist("playlist_ids")
+
+    job_id = str(uuid4())
+    
+    jobs[job_id] = {
+        "status": "running",
+        "results": None
+    }
+    
+    start_vibe_pipeline(job_id, playlist_ids, seed_tracks, vibe_profile)
+
+    return redirect(f"/searching/{job_id}")
+
+@main.route("/playlist/<job_id>")
+def playlist(job_id):
+
+    playlist = jobs[job_id]['playlist']
+    return render_template('playlist.html', playlist=playlist)
