@@ -26,6 +26,8 @@ ENV/
 dist/
 build/
 *.egg-info/
+instance/
+.pytest_cache/
 *.cache
 
 # test files - maybe save them later
@@ -41,5 +43,9 @@ tests/
 
 # don't save data
 *.db
+
+
+.DS_Store
+
 
 
