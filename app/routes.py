@@ -70,22 +70,11 @@ def test_vibe_db():
 
 @main.route("/")
 def home():
-    # user_playlists = []
-    # try:
-    #     user_playlists = session.get('user_playlists', [])
-    #     if user_playlists is None or len(user_playlists) == 0:
-    #         user_playlists = get_user_playlists()
-    
-    
-    # except requests.exceptions.ReadTimeout as e:
-    #     current_app.logger.error(e)
-
-    # session['user_playlists'] = user_playlists
-    # return render_template("index.html", user_playlists=user_playlists)
-    user_playlists = session.get(
-        "user_playlists",
-        []
-    )
+    user_id = session.get("user_id")
+    if user_id:
+        user_playlists = get_user_playlists(user_id)
+    else:
+        user_playlists = []
 
     return render_template(
         "index.html",
