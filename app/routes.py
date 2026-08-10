@@ -28,6 +28,21 @@ def spotify_login():
 
     return redirect(authorization_url)
 
+@main.route("/callback")
+def spotify_callback():
+    spotify_oauth = get_spotify_oauth()
+
+    code = request.args.get("code")
+
+    if not code:
+        return "No authorization code received", 400
+
+    token_info = spotify_oauth.get_access_token(code)
+
+    return f"Successfully connected to Spotify!"
+
+
+
 @main.route("/song-db")
 def test_song_db():
 
