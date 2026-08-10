@@ -3,7 +3,12 @@ from ..models.User import User
 from datetime import datetime
 from ..database import db
 
+
+from flask import current_app
+
 def query_user(token_info):
+    current_app.logger.info(f"USER CLASS: {User}")
+    current_app.logger.info(f"USER TYPE: {type(User)}")
     spotify = SpotifyClient(token_info["access_token"])
     spotify_user = spotify.sp_client.current_user()
 
@@ -12,7 +17,7 @@ def query_user(token_info):
 
     user = User.query.filter_by(
         spotify_id = spotify_id
-    )
+    ).first()
 
     if user is None:
         user = User(
@@ -28,6 +33,7 @@ def query_user(token_info):
         db.session.add(user)
     else:
         user.access_token = token_info['access_token']
+        user.display_name = display_name
         if token_info.get("refresh_token"):
             user.refresh_token = token_info.get("refresh_token")
 
@@ -37,4 +43,8 @@ def query_user(token_info):
 
     db.session.commit()
 
+
+    current_app.logger.info(
+        f"USER TYPE: {type(user)}, USER: {user}"
+    )
     return user.id
