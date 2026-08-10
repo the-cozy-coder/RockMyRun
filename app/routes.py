@@ -8,6 +8,7 @@ from .services.song_service import get_all_songs, get_result_data
 from .services.vibe_service import (get_all_vibe_profiles, save_vibe_profile, 
                                     get_vibe_profile, generate_playlist_from_vibe)
 from .services.spotify_service import get_user_playlists
+from .services.spotify_client import get_spotify_oauth
 from .workers import start_search_pipeline, start_vibe_pipeline
 from uuid import uuid4
 # Dev librariews
@@ -16,6 +17,16 @@ from .jobs import jobs
 
 
 main = Blueprint("main", __name__)
+
+
+@main.route("/spotify/login")
+def spotify_login():
+
+    spotify_oauth = get_spotify_oauth()
+
+    authorization_url = spotify_oauth.get_authorize_url()
+
+    return redirect(authorization_url)
 
 @main.route("/song-db")
 def test_song_db():
@@ -43,18 +54,27 @@ def test_vibe_db():
 
 @main.route("/")
 def home():
-    user_playlists = []
-    try:
-        user_playlists = session.get('user_playlists', [])
-        if user_playlists is None or len(user_playlists) == 0:
-            user_playlists = get_user_playlists()
+    # user_playlists = []
+    # try:
+    #     user_playlists = session.get('user_playlists', [])
+    #     if user_playlists is None or len(user_playlists) == 0:
+    #         user_playlists = get_user_playlists()
     
     
-    except requests.exceptions.ReadTimeout as e:
-        current_app.logger.error(e)
+    # except requests.exceptions.ReadTimeout as e:
+    #     current_app.logger.error(e)
 
-    session['user_playlists'] = user_playlists
-    return render_template("index.html", user_playlists=user_playlists)
+    # session['user_playlists'] = user_playlists
+    # return render_template("index.html", user_playlists=user_playlists)
+    user_playlists = session.get(
+        "user_playlists",
+        []
+    )
+
+    return render_template(
+        "index.html",
+        user_playlists=user_playlists
+    )
 
 @main.route("/search", methods = ["POST"])
 def search():
