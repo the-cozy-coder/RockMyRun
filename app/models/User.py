@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 class User(db.Model):
 
     __tablename__ = "user"
-    id = db.Column(db.Integar, primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
     spotify_id = db.Column(db.String, unique=True, nullable=False)
     display_name = db.Column(db.String)
     access_token = db.Column(db.String)
