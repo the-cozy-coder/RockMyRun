@@ -35,20 +35,6 @@ class SpotifyClient:
         )
 
 
-    def get_spotify_oauth():
-        return SpotifyOAuth(
-            client_id=current_app.config["SPOTIFY_CLIENT_ID"],
-            client_secret=current_app.config["SPOTIFY_CLIENT_SECRET"],
-            redirect_uri=current_app.config["SPOTIFY_REDIRECT_URI"],
-            scope=(
-                "user-library-read "
-                "playlist-read-private "
-                "playlist-read-collaborative "
-                "playlist-modify-public "
-                "playlist-modify-private"
-            )
-        )
-
     def search_spotify_track_id(self, title, artist, limit:int = 10):
         """Search for a Spotify track ID given a title and artist."""
         results = self.sp_client.search(q=f'track:{title} artist:{artist}', 
@@ -67,3 +53,17 @@ class SpotifyClient:
         results = self.sp_client.playlist_tracks(playlist_id)
         song_ids = [song['item']['id'] for song in results.get('items', [])]
         return song_ids
+
+def get_spotify_oauth():
+    return SpotifyOAuth(
+        client_id=current_app.config["SPOTIFY_CLIENT_ID"],
+        client_secret=current_app.config["SPOTIFY_CLIENT_SECRET"],
+        redirect_uri=current_app.config["SPOTIFY_REDIRECT_URI"],
+        scope=(
+            "user-library-read "
+            "playlist-read-private "
+            "playlist-read-collaborative "
+            "playlist-modify-public "
+            "playlist-modify-private"
+        )
+    )
