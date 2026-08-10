@@ -8,12 +8,13 @@ from .services.song_service import get_all_songs, get_result_data
 from .services.vibe_service import (get_all_vibe_profiles, save_vibe_profile, 
                                     get_vibe_profile, generate_playlist_from_vibe)
 from .services.spotify_service import get_user_playlists
-from .services.spotify_client import get_spotify_oauth
+from .services.spotify_client import get_spotify_oauth, SpotifyClient
+from .services.user_service import query_user
 from .workers import start_search_pipeline, start_vibe_pipeline
 from uuid import uuid4
-# Dev librariews
-import time
 from .jobs import jobs
+
+
 
 
 main = Blueprint("main", __name__)
@@ -39,9 +40,9 @@ def spotify_callback():
 
     token_info = spotify_oauth.get_access_token(code)
 
-    return f"Successfully connected to Spotify!"
-
-
+    user_id = query_user(token_info)
+    session['user_id'] = user_id
+    return redirect('/')
 
 @main.route("/song-db")
 def test_song_db():

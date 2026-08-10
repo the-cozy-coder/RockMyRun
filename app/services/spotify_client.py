@@ -2,31 +2,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from flask import current_app
 
-# class SpotifyClient:
-#     def __init__(self, client_id, client_secret, callback):
-#         self.client_id = client_id
-#         self.client_secret = client_secret
-#         self.callback = callback
-#         self.sp_client = self.spotify_client()
-    
-#     def spotify_client(self):
-#         scopes = ("user-library-read",
-#                   "playlist-read-private",
-#                   "playlist-read-collaborative",
-#                   "playlist-modify-public",
-#                   "playlist-modify-private")
-
-
-
-#         sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-#             client_id=self.client_id,
-#             client_secret=self.client_secret,
-#             redirect_uri=self.callback,
-#             scope=scopes
-#         ))
-#         return sp
-
-
 class SpotifyClient:
 
     def __init__(self, access_token):
