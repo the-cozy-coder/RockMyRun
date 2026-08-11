@@ -86,12 +86,15 @@ def search():
 
     seeds = request.form["seed_tracks"]
     playlist_ids = request.form.getlist("playlist_ids")
+    user_id = session.get("user_id")
+    print(f"serching {user_id}")
 
     job_id = str(uuid4())
 
     jobs[job_id] = {
         "status": "running",
-        "results": None
+        "results": None,
+        "user_id": user_id
     }
 
     start_search_pipeline(job_id, playlist_ids, seeds)
