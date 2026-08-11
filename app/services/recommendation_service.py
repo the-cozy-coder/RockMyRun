@@ -10,7 +10,7 @@ import numpy as np
 
 client = None
 
-def process_seeds(seeds):
+def process_seeds(user_id, seeds):
     spotify = None
     seed_tracks = [track.strip() for track in seeds.split(',') if track.strip()]
     # First see if the seed track exists in the database
@@ -29,7 +29,7 @@ def process_seeds(seeds):
             if song:
                 sid = song.spotify_id
             else:
-                sid, spotify = get_spotify_track_id(title, artist, spotify)
+                sid, spotify = get_spotify_track_id(user_id, title, artist, spotify)
         if sid is not None:
             sid = sid if isinstance(sid, list) else [sid]
             seed_track_sids.extend(sid)

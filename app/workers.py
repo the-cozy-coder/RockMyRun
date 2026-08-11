@@ -16,7 +16,7 @@ def run_search(app, job_id, playlist_ids):
         jobs[job_id]["message"] = "Getting playlists..."
 
         for pl_id in playlist_ids:
-            results = get_playlist_songs(pl_id)
+            results = get_playlist_songs(jobs[job_id]['user_id'], pl_id)
             jobs[job_id]["message"] = f"Retrieved {len(results)} results"
             song_spotify_ids.extend(results)
 
@@ -26,7 +26,7 @@ def run_search(app, job_id, playlist_ids):
 def get_recommendations(app, job_id, seeds, duration: int = 30, isVibe = False):
     with app.app_context():
         jobs[job_id]['message'] = "Processing song requests"
-        seed_ids = process_seeds(seeds)
+        seed_ids = process_seeds(jobs[job_id]['user_id'], seeds)
         num_recommendations = duration // 2
         seed_recommendations = KNN_recommendations(seed_ids, 
                                                     k=num_recommendations)
