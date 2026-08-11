@@ -16,24 +16,20 @@ def get_user_playlists(user_id):
     spotify = SpotifyClient(user.access_token)
     return spotify.get_user_playlists()
 
-def get_playlist_songs(pl_id):
-    spotify = SpotifyClient(
-        os.environ.get("SPOTIFY_CLIENT_ID"),
-        os.environ.get("SPOTIFY_CLIENT_SECRET"),
-        os.environ.get("SPOTIFY_REDIRECT_URI")
-    )
+def get_playlist_songs(user_id, pl_id):
+    user = User.query.get(user_id)
+
+    if user is None:
+        return []
+    
+    spotify = SpotifyClient(user.access_token)
     return spotify.get_playlist_songs(pl_id)
 
-def create_client() -> SpotifyClient:
-    spotify = SpotifyClient(
-        os.environ.get("SPOTIFY_CLIENT_ID"),
-        os.environ.get("SPOTIFY_CLIENT_SECRET"),
-        os.environ.get("SPOTIFY_REDIRECT_URI")
-    )
-    return spotify
 
-def get_spotify_track_id(title, artist, spotify=None):
+def get_spotify_track_id(user_id, title, artist, spotify=None):
+    user = User.query.get(user_id)
+
     if spotify is None:
-        spotify=create_client()
+        spotify = SpotifyClient(user.access_token)
     return spotify.search_spotify_track_id(title, artist, limit = 1), spotify
         
