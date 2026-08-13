@@ -25,6 +25,7 @@ def process_seeds(user_id, seeds):
         song = get_songs_by_title_and_artist(title, artist)
         if song:
             sid = song.spotify_id
+            current_app.logger.info(f'Found song and artist in database {sid}')
         else:
             #If the song by the selected artist isn't in the database try to find 
             # the same song by a different artist
@@ -32,14 +33,17 @@ def process_seeds(user_id, seeds):
             song = get_song_by_title(title)
             if song:
                 sid = song.spotify_id
+                current_app.logger.info(f'Found song in database {sid}')
             else:
                 sid, spotify = get_spotify_track_id(user_id, title, artist, spotify)
+                current_app.logger.info(f'Found song and artist in spotify {sid}')
                 new_sids.extend(sid)
         if sid is not None:
             sid = sid if isinstance(sid, list) else [sid]
             seed_track_sids.extend(sid)
     # Add seed tracks to the database (will only add tracks that are new)
-    add_songs_to_database(new_sids)
+    if len(new_sids) > 0:
+        add_songs_to_database(new_sids)
     return seed_track_sids
         
 def KNN_recommendations(seed_track_sids, k=10):
@@ -54,6 +58,8 @@ def KNN_recommendations(seed_track_sids, k=10):
     songs = get_all_audio_data()
     if k+1 > len(songs):
         k = len(songs) - 1
+        if k == 0:
+            return []
     current_app.logger.info(f"retrieved {len(songs)} audio data")
     current_app.logger.info(f"retrieved all audio data example - {songs[0:2]}")
 
