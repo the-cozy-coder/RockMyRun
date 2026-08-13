@@ -31,7 +31,8 @@ def get_playlist_songs(user_id, pl_id):
 
 def get_spotify_track_id(user_id, title, artist, spotify=None):
     user = User.query.get(user_id)
-
+    current_app.logger.info(f"user_id={user_id}")
+    current_app.logger.info(f"user={user}")
     if spotify is None:
         access_token = get_valid_access_token(user)
         spotify = SpotifyClient(access_token)
