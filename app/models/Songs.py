@@ -26,11 +26,3 @@ class Song(db.Model):
     hype_score = db.Column(db.Float)
     energy_score = db.Column(db.Float)
     motivation_score = db.Column(db.Float)
-
-    __table_args__ = (
-        db.UniqueConstraint(
-            "title",
-            "artist",
-            name="uq_song_title_artist"
-        ),
-    )

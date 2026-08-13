@@ -1,6 +1,7 @@
 from flask import Flask
 from .database import db
 from config import Config
+import logging
 
 
 def create_app():
@@ -9,7 +10,8 @@ def create_app():
     jobs = {}
 
     app.config.from_object(Config)
-
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("starting app")
     db.init_app(app)
 
     from .models import Songs

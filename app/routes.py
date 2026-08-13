@@ -1,7 +1,6 @@
 import requests
 from flask import Blueprint
-from flask import current_app
-from flask import Flask, render_template, request, jsonify, session, redirect
+from flask import Flask, render_template, request, jsonify, session, redirect, current_app
 from .models.Songs import Song
 from .models.VibeProfiles import VibeProfile
 from .services.song_service import get_all_songs, get_result_data
@@ -9,16 +8,12 @@ from .services.vibe_service import (get_all_vibe_profiles, save_vibe_profile,
                                     get_vibe_profile, generate_playlist_from_vibe)
 from .services.spotify_service import get_user_playlists
 from .services.spotify_client import get_spotify_oauth, SpotifyClient
-from .services.user_service import query_user
+from .services.user_service import query_user, get_all_users
 from .workers import start_search_pipeline, start_vibe_pipeline
 from uuid import uuid4
 from .jobs import jobs
 
-
-
-
 main = Blueprint("main", __name__)
-
 
 @main.route("/spotify/login")
 def spotify_login():
@@ -53,6 +48,18 @@ def test_song_db():
         [
             f"{song.title} - {song.artist} - {song.spotify_id} - {song.hype_score} - {song.reccobeats_id}"
             for song in songs
+        ]
+    )
+
+@main.route("/user-db")
+def test_user_db():
+
+    users = get_all_users(limit=50)
+
+    return "<br>".join(
+        [
+            f"{user.id} - {user.spotify_id} - {user.display_name} - {len(user.access_token)} - {user.token_expires_at} - {len(user.refresh_token)}"
+            for user in users
         ]
     )
 
@@ -142,7 +149,6 @@ def error(job_id):
         error_message=job.get("message", "An unknown error occurred.")
     )
 
-
 @main.route('/save_vibe_profile', methods=['POST'])
 def save_vibe_profile_route():
     """Persist a vibe profile sent by the front-end and return the new profile id."""
@@ -150,12 +156,11 @@ def save_vibe_profile_route():
     response = save_vibe_profile(data)
     return response
 
-
 @main.route("/generate_playlist/<int:profile_id>", methods=['GET', 'POST'])
 def VibeSearch(profile_id):
 
     vibe_profile = get_vibe_profile(profile_id)
-
+    user_id = session.get("user_id")
     seed_tracks = request.args.get("seed_tracks", "")
     playlist_ids = request.args.getlist("playlist_ids")
 
@@ -163,7 +168,8 @@ def VibeSearch(profile_id):
     
     jobs[job_id] = {
         "status": "running",
-        "results": None
+        "results": None,
+        "user_id": user_id
     }
     
     start_vibe_pipeline(job_id, playlist_ids, seed_tracks, vibe_profile)

@@ -14,6 +14,7 @@ def run_search(app, job_id, playlist_ids):
         song_spotify_ids = []
         jobs[job_id]["status"] = "running"
         jobs[job_id]["message"] = "Getting playlists..."
+        current_app.logger.info(f'Getting Playlists - user id = {jobs[job_id]['user_id']}')
 
         for pl_id in playlist_ids:
             results = get_playlist_songs(jobs[job_id]['user_id'], pl_id)
@@ -21,7 +22,9 @@ def run_search(app, job_id, playlist_ids):
             song_spotify_ids.extend(results)
 
         jobs[job_id]["message"] = "Adding new playlist songs to the Database"
+        current_app.logger.info("Adding new playlist songs to the Database")
         add_songs_to_database(song_spotify_ids)
+        current_app.logger.info(f"Added {len(song_spotify_ids)} songs")
 
 def get_recommendations(app, job_id, seeds, duration: int = 30, isVibe = False):
     with app.app_context():
@@ -102,9 +105,6 @@ def run_search_pipeline(
         finally:
             db.session.remove()
 
-
-
-
 def start_vibe_pipeline(
     job_id,
     playlist_ids,
@@ -112,6 +112,7 @@ def start_vibe_pipeline(
     vibe_profile
 ):
     app = current_app._get_current_object()
+    # We need some seed to get started and this is a good song.
     if len(seeds) == 0:
         seeds = 'Thunder Road - Bruce Springstein'
 
@@ -128,7 +129,6 @@ def start_vibe_pipeline(
 
     thread.start()
 
-
 def run_vibe_pipeline(
     app,
     job_id,
@@ -141,6 +141,7 @@ def run_vibe_pipeline(
             jobs[job_id]["status"] = "running"
 
             # STEP 1
+            current_app.logger.info(f'run search - vibe profile {vibe_profile}')
             run_search(
                 app,
                 job_id,
@@ -148,6 +149,7 @@ def run_vibe_pipeline(
             )
 
             # STEP 2
+            current_app.logger.info(f'get recommendations - vibe profile {vibe_profile}')
             recommendations = get_recommendations(
                 app,
                 job_id,
@@ -156,6 +158,7 @@ def run_vibe_pipeline(
             )
 
             # STEP 3
+            current_app.logger.info(f'get playlist - vibe profile {vibe_profile}')
             playlist = get_playlist(
                 app,
                 job_id,

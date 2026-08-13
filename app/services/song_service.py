@@ -3,6 +3,7 @@ from ..models.Songs import Song
 from .reccobeats_service import get_track_info, get_track_audio_details
 from pprint import pprint
 from ..schemas.song_schema import SongInfo
+from flask import current_app
 
 
 def get_all_songs(limit=None):
@@ -39,7 +40,7 @@ def filter_for_audio_data(sids: list[str]) -> list[Song]:
             Song.reccobeats_id.isnot(None)
         )
     ).all()
-
+    current_app.logger.info(f"seeds data = {songs}")
     return songs
 
 def get_song_by_title(title: str) -> Song | None:
@@ -75,6 +76,7 @@ def save_songs(songs: list):
     ]
 
     db.session.add_all(db_songs)
+    current_app.logger.info(f"Saved {len(songs)} songs to the database")
     db.session.commit()
 
 def normalize_to_100(numbers):
@@ -118,6 +120,7 @@ def calc_vibe_data(song_info):
 def get_complete_song_data(sids:list) -> list[SongInfo]:
     complete_data = []
     existing_ids = [song.spotify_id for song in get_songs_by_spotify_id(sids)]
+    current_app.logger.info(f"songs already in the database = {existing_ids}")
     songs_to_add = tuple(set(sids) - set(existing_ids))
     if len(songs_to_add) == 0:
         return {}
@@ -138,8 +141,10 @@ def get_complete_song_data(sids:list) -> list[SongInfo]:
 
     return complete_data
 
-def add_songs_to_database(spotify_ids: tuple):
+def add_songs_to_database(spotify_ids: list):
+    current_app.logger.info(f'Adding songs to database {spotify_ids}')
     song_data = get_complete_song_data(spotify_ids)
+    current_app.logger.info("retrieved song data")
     save_songs(song_data)
 
 def get_all_audio_data():
