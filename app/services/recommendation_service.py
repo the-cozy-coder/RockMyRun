@@ -43,8 +43,8 @@ def process_seeds(user_id, seeds):
             seed_track_sids.extend(sid)
     # Add seed tracks to the database (will only add tracks that are new)
     if len(new_sids) > 0:
-        add_songs_to_database(new_sids)
-    return seed_track_sids
+        add_songs_to_database(new_sids)  
+    return seed_track_sids, seed_tracks
         
 def KNN_recommendations(seed_track_sids, k=10):
     """Get recommendations based on seed tracks.""" 

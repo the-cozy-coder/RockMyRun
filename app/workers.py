@@ -29,7 +29,10 @@ def run_search(app, job_id, playlist_ids):
 def get_recommendations(app, job_id, seeds, duration: int = 30, isVibe = False):
     with app.app_context():
         jobs[job_id]['message'] = "Processing song requests"
-        seed_ids = process_seeds(jobs[job_id]['user_id'], seeds)
+        seed_ids, search_crit = process_seeds(jobs[job_id]['user_id'], seeds)
+        if len(seed_ids) == 0:
+            raise Exception("""None of your seed tracks were found in Spotify.\n
+                            Please check your spelling and try again.""")
         num_recommendations = duration // 2
         seed_recommendations = KNN_recommendations(seed_ids, 
                                                     k=num_recommendations)
@@ -38,7 +41,7 @@ def get_recommendations(app, job_id, seeds, duration: int = 30, isVibe = False):
             jobs[job_id]["status"] = "complete_search"
         else:
             jobs[job_id]["status"] = "genrating Vibe playlist"
-    return seed_recommendations
+    return seed_recommendations, search_crit
             
 def get_playlist(app, job_id, vibe_profile, recommendations):
     with app.app_context():
@@ -86,17 +89,19 @@ def run_search_pipeline(
             )
 
             # STEP 2
-            recommendations = get_recommendations(
+            recommendations,search_criteria = get_recommendations(
                 app,
                 job_id,
                 seeds,
                 duration = 30
             )
 
-
+            jobs[job_id]["search_criteria"] = search_criteria
             jobs[job_id]["results"] = recommendations
             jobs[job_id]["status"] = "complete_search"
             jobs[job_id]["message"] = "Playlist generated!"
+            current_app.logger.info(f"final jobs[job_id] - {jobs[job_id]}")
+
 
         except Exception as e:
             jobs[job_id]["status"] = "error"
@@ -150,7 +155,7 @@ def run_vibe_pipeline(
 
             # STEP 2
             current_app.logger.info(f'get recommendations - vibe profile {vibe_profile}')
-            recommendations = get_recommendations(
+            recommendations, search_criteria = get_recommendations(
                 app,
                 job_id,
                 seeds,
@@ -165,6 +170,7 @@ def run_vibe_pipeline(
                 vibe_profile,
                 recommendations
             )
+            jobs[job_id]["search_criteria"] = search_criteria
             jobs[job_id]["playlist"] = playlist
             jobs[job_id]["status"] = "complete_vibe"
             jobs[job_id]["message"] = "Playlist generated!"

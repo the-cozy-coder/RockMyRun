@@ -126,7 +126,7 @@ def status(job_id):
 def results(job_id):
 
     search_results = {
-        'artists': ['artist1aa', 'artist2aaa', 'artist3aaa'],
+        'artists': jobs[job_id]["search_criteria"],
         'all_songs': get_result_data(jobs[job_id]["results"]),
         'total_results': len(jobs[job_id]["results"]),
     }
