@@ -1,393 +1,508 @@
+/* =========================================================
+   Base
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
+    margin: 0;
     padding: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+
     background-color: #f5f5f5;
+    color: #333;
 }
 
 .container {
-    background: white;
+    position: relative;
+
+    background: #fff;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
+
+
+/* =========================================================
+   Typography
+   ========================================================= */
+
 h1 {
+    margin: 0 0 10px;
+
     color: #333;
     text-align: center;
-    margin-bottom: 10px;
 }
+
+.description,
 .subtitle {
-    text-align: center;
-    color: #666;
     margin-bottom: 30px;
+
+    color: #666;
+    text-align: center;
+}
+
+.description {
+    font-size: 18px;
+}
+
+.subtitle {
     font-size: 16px;
 }
-.chart-container {
-    position: relative;
-    height: 400px;
-    margin-bottom: 30px;
+
+
+/* =========================================================
+   Running Icon
+   ========================================================= */
+
+.running-icon {
+    margin-bottom: 20px;
+
+    font-size: 48px;
+    text-align: center;
 }
+
+
+/* =========================================================
+   Forms & Controls
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label,
+.control-group label {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #555;
+    font-weight: 600;
+}
+
 .controls {
     display: flex;
     gap: 30px;
-    margin-bottom: 30px;
     flex-wrap: wrap;
+
+    margin-bottom: 30px;
 }
+
 .control-group {
     flex: 1;
     min-width: 180px;
 }
-.control-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #555;
-}
+
 .control-group input {
     width: 100%;
     padding: 8px;
+
     border: 2px solid #ddd;
     border-radius: 5px;
+
     font-size: 14px;
 }
-.form-group {
-    margin-bottom: 20px;
-}
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #555;
-}
-input[type="text"], select {
+
+input[type="text"],
+select {
     width: 100%;
     padding: 12px;
+
     border: 2px solid #ddd;
     border-radius: 5px;
+
     font-size: 16px;
-    transition: border-color 0.3s;
+
+    transition: border-color 0.2s ease;
 }
+
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
 }
+
 .checkbox-group label {
     display: flex;
     align-items: center;
-    font-weight: normal;
+
     margin: 0;
+    font-weight: normal;
 }
+
 .checkbox-group input[type="checkbox"] {
     margin-right: 8px;
 }
-button {
-    background-color: #007bff;
-    color: white;
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+button,
+.back-button,
+.export-btn {
     padding: 12px 30px;
+
     border: none;
     border-radius: 5px;
+
+    color: white;
     font-size: 16px;
+
     cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
+
+button {
+    width: 100%;
+    background-color: #007bff;
+}
+
 button:hover {
     background-color: #0056b3;
 }
+
 .secondary-btn {
     background-color: #6c757d;
 }
+
 .secondary-btn:hover {
     background-color: #545b62;
 }
-.description {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 18px;
-}
+
 .buttons {
     display: flex;
-    gap: 15px;
     justify-content: center;
+    gap: 15px;
     flex-wrap: wrap;
+
     margin-top: 30px;
 }
+
+.back-button {
+    margin-top: 30px;
+    background-color: #6c757d;
+}
+
+.back-button:hover {
+    background-color: #545b62;
+}
+
+.export-btn {
+    margin-top: 30px;
+    margin-left: 20px;
+
+    background-color: #28a745;
+}
+
+.export-btn:hover {
+    background-color: #218838;
+}
+
+
+/* =========================================================
+   Charts
+   ========================================================= */
+
+.chart-container {
+    position: relative;
+
+    height: 400px;
+    margin-bottom: 30px;
+}
+
 .legend {
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
+
+    margin-bottom: 20px;
 }
+
 .legend-item {
     display: flex;
     align-items: center;
     gap: 8px;
 }
+
 .legend-color {
     width: 20px;
     height: 4px;
+
     border-radius: 2px;
 }
-.running-icon {
-    font-size: 48px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-.instructions {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 5px;
+
+
+/* =========================================================
+   Information / Instructions
+   ========================================================= */
+
+.instructions,
+.query-info,
+.playlist-info {
     margin-bottom: 30px;
+    padding: 20px;
+
+    background-color: #e9ecef;
+    border-radius: 8px;
 }
+
 .instructions h3 {
     margin-top: 0;
     color: #495057;
 }
+
 .instructions ul {
     margin: 10px 0;
     padding-left: 20px;
 }
+
 .instructions li {
     margin-bottom: 5px;
 }
-.query-info {
-    background-color: #e9ecef;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    text-align: center;
-}
-.results-list {
-    list-style: none;
-    padding: 0;
-}
-.result-item {
-    background: #f8f9fa;
-    margin-bottom: 5px;
-    padding: 10px;
-    border-radius: 8px;
-    border-left: 4px solid #12ab17;
-    transition: transform 0.2s;
-}
-.result-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.track-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-}
-.track-artist {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-.track-meta {
-    display: flex;
-    gap: 15px;
-    font-size: 14px;
-    color: #888;
-}
-.meta-item {
-    background: #007bff;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-}
-.source-local {
-    background-color: #28a745 !important;
-}
-.source-api {
-    background-color: #17a2b8 !important;
-}
-.back-button {
-    background-color: #6c757d;
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 30px;
-    transition: background-color 0.3s;
-}
-.back-button:hover {
-    background-color: #545b62;
-}
 
-.no-results {
+.query-info {
+    padding: 15px;
     text-align: center;
-    color: #666;
-    font-size: 18px;
-    padding: 40px;
 }
 
 .playlist-info {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
     text-align: center;
 }
+
 .playlist-info h2 {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     color: #495057;
 }
+
 .playlist-info p {
     margin: 5px 0;
     color: #666;
 }
+
+
+/* =========================================================
+   Results
+   ========================================================= */
+
+.results-list,
 .songs-list {
-    list-style: none;
+    margin: 0;
     padding: 0;
+
+    list-style: none;
 }
-.song-item {
+
+.result-item {
+    margin-bottom: 5px;
+    padding: 10px;
+
     background: #f8f9fa;
+    border-left: 4px solid #12ab17;
+    border-radius: 8px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.result-item:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.track-title,
+.song-title {
+    margin-bottom: 5px;
+
+    color: #333;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.track-artist,
+.song-artist {
+    margin-bottom: 10px;
+
+    color: #666;
+    font-size: 16px;
+}
+
+.track-meta,
+.song-meta {
+    display: flex;
+    gap: 15px;
+
+    color: #888;
+    font-size: 14px;
+}
+
+.meta-item {
+    padding: 4px 8px;
+
+    background: #007bff;
+    border-radius: 4px;
+
+    color: white;
+}
+
+.source-local {
+    background-color: #28a745 !important;
+}
+
+.source-api {
+    background-color: #17a2b8 !important;
+}
+
+
+/* =========================================================
+   Songs
+   ========================================================= */
+
+.song-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     margin-bottom: 15px;
     padding: 20px;
-    border-radius: 8px;
+
+    background: #f8f9fa;
     border-left: 4px solid #007bff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-radius: 8px;
 }
+
 .song-info {
     flex: 1;
 }
-.song-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-}
-.song-artist {
-    color: #666;
-    margin-bottom: 5px;
-}
-.song-meta {
-    font-size: 14px;
-    color: #888;
-}
+
 .song-timing {
-    text-align: right;
     min-width: 120px;
+    text-align: right;
 }
+
 .song-time {
-    font-weight: bold;
     color: #007bff;
     font-size: 16px;
+    font-weight: 700;
 }
+
 .song-duration {
     color: #666;
     font-size: 14px;
 }
+
+
+/* =========================================================
+   Vibe Information
+   ========================================================= */
+
 .vibe-target {
+    margin-top: 10px;
+    padding: 8px;
+
     background: #fff3cd;
     border: 1px solid #ffeaa7;
     border-radius: 4px;
-    padding: 8px;
-    margin-top: 10px;
+
     font-size: 12px;
 }
+
 .vibe-bars {
     display: flex;
     gap: 10px;
+
     margin-top: 5px;
 }
+
 .vibe-bar {
     flex: 1;
     height: 8px;
+
+    overflow: hidden;
+
     background: #e9ecef;
     border-radius: 4px;
-    overflow: hidden;
 }
+
 .vibe-fill {
     height: 100%;
     border-radius: 4px;
 }
+
 .vibe-fill.hype {
     background: #ff6b6b;
 }
+
 .vibe-fill.energetic {
     background: #4ecdc4;
 }
+
 .vibe-fill.motivation {
     background: #45b7d1;
 }
+
+
+/* =========================================================
+   Empty / Error States
+   ========================================================= */
+
+.no-results,
 .no-songs {
-    text-align: center;
-    color: #666;
-    font-style: italic;
     padding: 40px;
+
+    color: #666;
+    text-align: center;
 }
 
-.export-btn {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 30px;
-    margin-left: 20px;
+.no-results {
+    font-size: 18px;
 }
-.export-btn:hover {
-    background-color: #218838;
+
+.no-songs {
+    font-style: italic;
 }
 
 .error {
-    color: red;
-    font-weight: bold;
+    color: #dc3545;
+    font-weight: 700;
 }
 
 
-.spotify-button {
-    display: inline-block;
-    padding: 9px 16px;
-
-    border-radius: 20px;
-
-    background-color: #1DB954;
-    color: white;
-
-    text-decoration: none;
-    font-weight: 600;
-
-    transition: opacity 0.2s ease;
-}
-
-.spotify-button:hover {
-    opacity: 0.85;
-}
-
-.spotify-connected {
-    color: #1DB954;
-    font-weight: 600;
-}
-
-.spotify-disconnect {
-    color: #777;
-    text-decoration: none;
-}
-
-.spotify-disconnect:hover {
-    text-decoration: underline;
-}
+/* =========================================================
+   Spotify Connection
+   ========================================================= */
 
 .spotify-status {
     position: absolute;
     top: 20px;
-    right: 110px;
+    right: 30px;
+
+    z-index: 10;
 }
 
-/* CONNECT BUTTON */
+
+/* Connect */
 
 .spotify-connect {
     display: flex;
@@ -396,28 +511,30 @@ button:hover {
 
     padding: 10px 16px;
 
+    background: white;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px;
 
-    background: white;
     color: #222;
-
-    text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    text-decoration: none;
 
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 
-    transition: all 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .spotify-connect:hover {
     transform: translateY(-1px);
+
     box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
 }
 
 
-/* CONNECTED ACCOUNT */
+/* Connected account */
 
 .spotify-account {
     display: flex;
@@ -444,52 +561,49 @@ button:hover {
     align-items: center;
     justify-content: center;
 
+    position: relative;
+
     width: 22px;
     height: 22px;
 
+    background: #1db954;
     border-radius: 50%;
 
-    background: #1DB954;
     color: white;
-
     font-size: 11px;
 }
 
-.spotify-icon.connected {
-    position: relative;
-}
-
-/* Small "online" indicator */
 .spotify-icon.connected::after {
     content: "";
 
     position: absolute;
-    bottom: -1px;
     right: -1px;
+    bottom: -1px;
 
     width: 7px;
     height: 7px;
 
+    background: #2ecc71;
     border: 2px solid white;
     border-radius: 50%;
-
-    background: #2ecc71;
 }
 
 .spotify-label {
-    font-size: 12px;
     color: #777;
+    font-size: 12px;
     line-height: 1.1;
 }
 
 .spotify-status-text {
     margin-top: 2px;
 
+    color: #222;
     font-size: 14px;
     font-weight: 600;
-
-    color: #222;
 }
+
+
+/* Disconnect */
 
 .spotify-disconnect {
     padding: 7px 10px;
@@ -497,12 +611,13 @@ button:hover {
     border-radius: 8px;
 
     color: #777;
-    text-decoration: none;
-
     font-size: 12px;
     font-weight: 500;
+    text-decoration: none;
 
-    transition: all 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .spotify-disconnect:hover {
@@ -511,4 +626,45 @@ button:hover {
 }
 
 
+/* =========================================================
+   Mobile
+   ========================================================= */
 
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .spotify-status {
+        position: static;
+
+        display: flex;
+        justify-content: flex-end;
+
+        margin-bottom: 20px;
+    }
+
+    .spotify-account {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .song-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .song-timing {
+        min-width: auto;
+        text-align: left;
+    }
+
+    .export-btn {
+        margin-left: 0;
+    }
+}

@@ -18,7 +18,7 @@ class SpotifyClient:
         track_id = [x.get('id') for x in results['tracks']['items']]
         return track_id
 
-    def get_user_playlists(self):
+    def get_user_playlists_from_spotify(self):
         user_playlists = self.sp_client.current_user_playlists(limit=50, offset=0)
         owned_playlists = [{"id":pl['id'], "name":pl['name']} for pl in user_playlists['items'] if pl['owner']['id'] == self.sp_client.current_user()['id']]
         return owned_playlists
@@ -40,5 +40,6 @@ def get_spotify_oauth():
             "playlist-read-collaborative "
             "playlist-modify-public "
             "playlist-modify-private"
-        )
-    )
+        ),
+        cache_handler=spotipy.cache_handler.MemoryCacheHandler()
+)

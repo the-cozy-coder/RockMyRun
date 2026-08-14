@@ -1,12 +1,12 @@
 import requests
 from flask import Blueprint
-from flask import Flask, render_template, request, jsonify, session, redirect, current_app
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, current_app
 from .models.Songs import Song
 from .models.VibeProfiles import VibeProfile
 from .services.song_service import get_all_songs, get_result_data
 from .services.vibe_service import (get_all_vibe_profiles, save_vibe_profile, 
                                     get_vibe_profile, generate_playlist_from_vibe)
-from .services.spotify_service import get_user_playlists
+from .services.spotify_service import sync_user_playlists, get_user_playlists_from_db, get_all_playlists
 from .services.spotify_client import get_spotify_oauth, SpotifyClient
 from .services.user_service import query_user, get_all_users
 from .workers import start_search_pipeline, start_vibe_pipeline
@@ -44,6 +44,8 @@ def spotify_callback():
 
     user_id = query_user(token_info)
     session['user_id'] = user_id
+    sync_user_playlists(user_id)
+
     return redirect('/')
 
 @main.route("/song-db")
@@ -82,13 +84,22 @@ def test_vibe_db():
         ]
     )
 
+@main.route("/playlist-db")
+def test_playlist_db():
+
+    playlists = get_all_playlists()
+
+    return "<br>".join(
+        [
+            f"{playlist.id} - {playlist.spotify_id} - {playlist.name} - {playlist.user_id}"
+            for playlist in playlists
+        ]
+    )
+
 @main.route("/")
 def home():
     user_id = session.get("user_id")
-    if user_id:
-        user_playlists = get_user_playlists(user_id)
-    else:
-        user_playlists = []
+    user_playlists = get_user_playlists_from_db(user_id)
 
     return render_template(
         "index.html",
