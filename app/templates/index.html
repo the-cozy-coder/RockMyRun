@@ -11,12 +11,36 @@
 </head>
 <body>
     <div class="container">
+        <div class="spotify-status">
+        {% if not user_id %}
+            <a href="{{ url_for('main.spotify_login') }}" class="spotify-connect">
+                <span class="spotify-icon">●</span>
+                <span>Connect Spotify</span>
+            </a>
+        {% else %}
+            <div class="spotify-account">
+                <div class="spotify-account-info">
+                    <span class="spotify-icon connected">●</span>
+                    <div>
+                        <div class="spotify-label">Spotify</div>
+                        <div class="spotify-status-text">Connected</div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('main.spotify_logout') }}"
+                class="spotify-disconnect">
+                    Disconnect
+                </a>
+            </div>
+        {% endif %}
+        </div>
+
         <div class="running-icon">🏃‍♂️</div>
         <h1>RockMyRun</h1>
-        <a href="/spotify/login">
-            Connect Spotify
-        </a>
-        <p class="description">Find the perfect music for your runs using AI-powered search</p>
+
+        <p class="description">
+            Find the perfect music for your runs using AI-powered search
+        </p>
         <form id="searchForm"  action="/search" method="post">
             <div class="form-group">
                 <label for="playlists">Your Playlists - indicate which ones to use to influence your playlist</label>
@@ -82,9 +106,8 @@
             <button type="button" onclick="generatePlaylist()">
                 Create my playlist
             </button>
-            <!-- </div> -->
         </div>
-
+    </div>
 
     <script>
         let hypeData =       [90, 75, 45,  5,  5,  0]//, 45, 35, 25, 20, 15];

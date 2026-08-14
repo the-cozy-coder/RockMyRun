@@ -24,6 +24,13 @@ def spotify_login():
 
     return redirect(authorization_url)
 
+@main.route("/spotify/logout")
+def spotify_logout():
+    session.pop("user_id", None)
+    session.pop("user_playlists", None)
+
+    return redirect(url_for("main.home"))
+
 @main.route("/callback")
 def spotify_callback():
     spotify_oauth = get_spotify_oauth()
@@ -85,7 +92,8 @@ def home():
 
     return render_template(
         "index.html",
-        user_playlists=user_playlists
+        user_playlists=user_playlists,
+        user_id=session.get("user_id")
     )
 
 @main.route("/search", methods = ["POST"])
