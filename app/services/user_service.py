@@ -66,9 +66,14 @@ def query_user(token_info):
     return user.id
 
 def get_valid_access_token(user):
+    current_app.logger.info(
+            f"user token expires at {user.token_expires_at.replace(tzinfo=timezone.utc)}\n"
+            f"now =  {datetime.now(timezone.utc)}\n"
+        )
+
     if (
         user.token_expires_at is not None and
-        user.token_expires_at.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc)
+        user.token_expires_at.replace(tzinfo=timezone.utc) <= datetime.now(timezone.utc)
     ):
         current_app.logger.info(
             f"Refreshing Spotify token for {user.spotify_id}"
@@ -88,3 +93,4 @@ def get_valid_access_token(user):
         db.session.commit()
 
         return user.access_token
+    return user.access_token
