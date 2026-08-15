@@ -35,6 +35,8 @@ def get_spotify_track_id(user_id, title, artist, spotify=None):
         f"Searching Spotify: title='{title}', artist='{artist}'"
     )
     user = User.query.get(user_id)
+    if user is None:
+        return [], None
     current_app.logger.info(f"user_id={user_id}")
     current_app.logger.info(f"user={user}")
     if spotify is None:
@@ -78,9 +80,15 @@ def sync_user_playlists(user_id):
     return playlists      
 
 def get_user_playlists_from_db(user_id):
-    return Playlist.query.filter_by(
-        user_id=user_id
-    ).all()
+    playlists = Playlist.query.filter_by(user_id=user_id).all()
+
+    return [
+        {
+            "spotify_id": p.spotify_id,
+            "name": p.name
+        }
+        for p in playlists
+    ]
 
 def get_all_playlists(limit=None):
 
