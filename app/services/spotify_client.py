@@ -25,6 +25,7 @@ class SpotifyClient:
 
     def get_playlist_songs(self, playlist_id)->list:
         """Get a list of Spotify track IDs from a playlist."""
+        current_app.logger.info(f"getting tracks from playlist {playlist_id}")
         results = self.sp_client.playlist_tracks(playlist_id)
         song_ids = [song['item']['id'] for song in results.get('items', [])]
         return song_ids

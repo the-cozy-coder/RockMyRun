@@ -47,7 +47,7 @@
                 <div class="checkbox-group">
                 {% if user_playlists %}
                     {% for playlist in user_playlists %}
-                        <label><input type="checkbox" name="playlist_ids" value="{{ playlist.id }}"> {{ playlist.name }}</label>
+                        <label><input type="checkbox" name="playlist_ids" value="{{ playlist.spotify_id }}"> {{ playlist.name }}</label>
                     {% endfor %}
                 {% else %}
                     <span style="color: #888;">No playlists found or not connected to Spotify.</span>

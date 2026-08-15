@@ -15,8 +15,10 @@ def run_search(app, job_id, playlist_ids):
         jobs[job_id]["status"] = "running"
         jobs[job_id]["message"] = "Getting playlists..."
         current_app.logger.info(f'Getting Playlists - user id = {jobs[job_id]['user_id']}')
+        current_app.logger.info(f'Getting Playlists - playlists = {playlist_ids}')
 
         for pl_id in playlist_ids:
+            current_app.logger.info(f"Getting playlist tracks for track {pl_id}")
             results = get_playlist_songs(jobs[job_id]['user_id'], pl_id)
             jobs[job_id]["message"] = f"Retrieved {len(results)} results"
             song_spotify_ids.extend(results)
