@@ -55,9 +55,7 @@ def KNN_recommendations(seed_track_sids, k=10):
     usable_seeds = filter_for_audio_data(seed_track_sids)
     current_app.logger.info(f"Using the following usable seeds:  {usable_seeds}")
     if len(usable_seeds) == 0:
-        return []  
-     
-
+        usable_seeds = ["56lhDZNQ5J47aog6mGKeGk"]
     songs = get_all_audio_data()
     if k+1 > len(songs):
         k = len(songs) - 1
