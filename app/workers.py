@@ -31,8 +31,19 @@ def get_recommendations(app, job_id, seeds, duration: int = 30, isVibe = False):
         jobs[job_id]['message'] = "Processing song requests"
         seed_ids, search_crit = process_seeds(jobs[job_id]['user_id'], seeds)
         if len(seed_ids) == 0:
-            raise Exception("""None of your seed tracks were found in Spotify.\n
-                            Please check your spelling and try again.""")
+            if jobs[job_id]['user_id'] is None:
+                raise Exception("""<h2>None of your seed tracks were found in the local database.</h2>\n
+                <h3>Troubleshooting Recommendations:</h3>
+                <ol>
+                <li>Log into Spotify to take advantage of their much larger database.<br>
+                    This will also add the song info to our database for future use!</li>
+                <li>Please check your spelling and try again.  <br>
+                    RockMyRun does not currently support fuzzy matching</li>
+                </ol>
+                """)
+            else:
+                raise Exception("""None of your seed tracks were found in Spotify.\n
+                                Please check your spelling and try again.""")
         num_recommendations = duration // 2
         seed_recommendations = KNN_recommendations(seed_ids, 
                                                     k=num_recommendations)

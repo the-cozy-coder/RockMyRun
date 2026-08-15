@@ -1,5 +1,7 @@
 <h1>Something went wrong</h1>
 
-<p>{{ error_message }}</p>
+<div class="error-content">
+    {{ error_message | safe }}
+</div>
 
 <a href="/">Return Home</a>

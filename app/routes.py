@@ -99,6 +99,7 @@ def test_playlist_db():
 @main.route("/")
 def home():
     user_id = session.get("user_id")
+    print(user_id)
     user_playlists = get_user_playlists_from_db(user_id)
 
     return render_template(

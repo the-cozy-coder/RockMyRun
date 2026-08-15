@@ -35,9 +35,12 @@ def process_seeds(user_id, seeds):
                 sid = song.spotify_id
                 current_app.logger.info(f'Found song in database {sid}')
             else:
-                sid, spotify = get_spotify_track_id(user_id, title, artist, spotify)
-                current_app.logger.info(f'Found song and artist in spotify {sid}')
-                new_sids.extend(sid)
+                if user_id is not None:
+                    sid, spotify = get_spotify_track_id(user_id, title, artist, spotify)
+                    current_app.logger.info(f'Found song and artist in spotify {sid}')
+                    new_sids.extend(sid)
+                else:
+                    sid = None
         if sid is not None:
             sid = sid if isinstance(sid, list) else [sid]
             seed_track_sids.extend(sid)
