@@ -51,7 +51,7 @@ def spotify_callback():
 @main.route("/song-db")
 def test_song_db():
 
-    songs = get_all_songs(limit=50)
+    songs = get_all_songs()
 
     return "<br>".join(
         [
