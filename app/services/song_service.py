@@ -4,6 +4,18 @@ from .reccobeats_service import get_track_info, get_track_audio_details
 from pprint import pprint
 from ..schemas.song_schema import SongInfo
 from flask import current_app
+from sqlalchemy import func
+
+def get_random_song_id():
+    song = (
+        Song.query
+        .with_entities(Song.spotify_id)
+        .filter(Song.reccobeats_id.isnot(None))
+        .order_by(func.random())
+        .first()
+    )
+
+    return song.spotify_id if song else None
 
 
 def get_all_songs(limit=None):
@@ -168,6 +180,8 @@ def get_all_audio_data():
         )
         .all()
     )
+
+    
     return songs
 
 
