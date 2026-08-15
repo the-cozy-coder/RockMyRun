@@ -51,7 +51,7 @@ def process_seeds(user_id, seeds):
         
 def KNN_recommendations(seed_track_sids, k=10):
     """Get recommendations based on seed tracks.""" 
-    
+    current_app.logger.info(f'Starting recommendation engine with the following seeds: f{seed_track_sids}')
     usable_seeds = filter_for_audio_data(seed_track_sids)
     current_app.logger.info(f"Using the following usable seeds:  {usable_seeds}")
     if len(usable_seeds) == 0:
