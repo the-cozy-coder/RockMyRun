@@ -3,7 +3,8 @@ from .song_service import (get_songs_by_title_and_artist,
                            add_songs_to_database,
                            filter_for_audio_data,
                            get_all_audio_data,
-                           get_random_song_id)
+                           get_random_song_id,
+                           filter_seeds)
 from .spotify_service import get_spotify_track_id
 from scipy.spatial import KDTree
 import sqlite3
@@ -37,9 +38,11 @@ def process_seeds(user_id, seeds):
                 current_app.logger.info(f'Found song in database {sid}')
             else:
                 if user_id is not None:
-                    sid, spotify = get_spotify_track_id(user_id, title, artist, spotify)
+                    sid_list, spotify = get_spotify_track_id(user_id, title, artist, spotify)
+                    current_app.logger.info(f"located the folling seed ids: {sid_list}")
+                    sid = filter_seeds(sid_list)
                     current_app.logger.info(f'Found song and artist in spotify {sid}')
-                    new_sids.extend(sid)
+                    new_sids.extend([sid])
                 else:
                     sid = None
         if sid is not None:
@@ -56,7 +59,8 @@ def KNN_recommendations(seed_track_sids, k=10):
     usable_seeds = filter_for_audio_data(seed_track_sids)
     if len(usable_seeds) == 0:
         #if none of the seeds are usable, select a random usable seed:
-        usable_seeds = [get_random_song_id]
+        usable_seeds = [get_random_song_id()]
+    current_app.logger.info(f'USABLE seeds: {usable_seeds}')
     songs = get_all_audio_data()
     if k+1 > len(songs):
         k = len(songs) - 1

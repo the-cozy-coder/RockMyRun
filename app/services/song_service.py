@@ -129,6 +129,17 @@ def calc_vibe_data(song_info):
             'energy_score': round(norm_scores[2], 2)}
     return vibe_data
     
+def filter_seeds(sids: list):
+    '''
+    Returns the first id that has reccobeats data
+    '''
+    song_info = get_track_info(tuple(sids))
+    sids = [x.get('spotify_id') for x in song_info]
+    current_app.logger.info(f"filtered sids = {sids}")
+    return sids[0]
+
+
+
 def get_complete_song_data(sids:list) -> list[SongInfo]:
     complete_data = []
     existing_ids = [song.spotify_id for song in get_songs_by_spotify_id(sids)]

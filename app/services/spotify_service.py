@@ -45,7 +45,7 @@ def get_spotify_track_id(user_id, title, artist, spotify=None):
             f"Token length={len(access_token)}"
         )
         spotify = SpotifyClient(access_token)
-    return spotify.search_spotify_track_id(title, artist, limit = 1), spotify
+    return spotify.search_spotify_track_id(title, artist, limit = 5), spotify
 
 
 def sync_user_playlists(user_id):
