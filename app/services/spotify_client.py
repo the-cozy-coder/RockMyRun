@@ -1,5 +1,5 @@
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from flask import current_app
 
 class SpotifyClient:
@@ -8,7 +8,6 @@ class SpotifyClient:
         self.sp_client = spotipy.Spotify(
             auth=access_token
         )
-
 
     def search_spotify_track_id(self, title, artist, limit:int = 10):
         """Search for a Spotify track ID given a title and artist."""
@@ -44,3 +43,13 @@ def get_spotify_oauth():
         ),
         cache_handler=spotipy.cache_handler.MemoryCacheHandler()
 )
+
+
+class SpotifySearchClient:
+    def __init__(self):
+        self.sp_client = spotipy.Spotify(
+            auth_manager=SpotifyClientCredentials(
+                client_id=current_app.config["SPOTIFY_CLIENT_ID"],
+                client_secret=current_app.config["SPOTIFY_CLIENT_SECRET"]
+            )
+        )

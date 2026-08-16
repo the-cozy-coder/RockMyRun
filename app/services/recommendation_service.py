@@ -39,6 +39,8 @@ def process_seeds(user_id, seeds):
             else:
                 if user_id is not None:
                     sid_list, spotify = get_spotify_track_id(user_id, title, artist, spotify)
+
+                    
                     current_app.logger.info(f"located the folling seed ids: {sid_list}")
                     sid = filter_seeds(sid_list)
                     current_app.logger.info(f'Found song and artist in spotify {sid}')

@@ -1,5 +1,5 @@
 from flask import current_app
-from .spotify_client import SpotifyClient
+from .spotify_client import SpotifyClient, SpotifySearchClient
 from .user_service import get_valid_access_token
 from ..models.User import User
 from ..models.Playlist import Playlist
@@ -46,6 +46,26 @@ def get_spotify_track_id(user_id, title, artist, spotify=None):
         )
         spotify = SpotifyClient(access_token)
     return spotify.search_spotify_track_id(title, artist, limit = 5), spotify
+
+
+def get_spotify_track_id(title, artist, limit=5):
+        spotify = SpotifySearchClient()
+        query = f'track:"{title}" artist:"{artist}"'
+
+        results = spotify.sp_client.search(
+            q=query,
+            type="track",
+            limit=limit
+        )
+
+        tracks = results["tracks"]["items"]
+
+        if not tracks:
+            return None
+
+        return tracks
+
+
 
 
 def sync_user_playlists(user_id):
@@ -98,3 +118,4 @@ def get_all_playlists(limit=None):
         query = query.limit(limit)
 
     return query.all()
+
