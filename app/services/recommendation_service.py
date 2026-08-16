@@ -14,8 +14,6 @@ from flask import current_app
 client = None
 
 def process_seeds(user_id, seeds):
-    current_app.logger.info(f'processing seeds user id {user_id}')
-    current_app.logger.info(f'processing seeds list {seeds}')
     spotify = None
     seed_tracks = [track.strip() for track in seeds.split(',') if track.strip()]
     # First see if the seed track exists in the database
@@ -25,28 +23,20 @@ def process_seeds(user_id, seeds):
         title = track.split('-')[0].strip()
         artist = track.split('-')[1].strip()
         song = get_songs_by_title_and_artist(title, artist)
-        if song:
+        if song is not None:
             sid = song.spotify_id
-            current_app.logger.info(f'Found song and artist in database {sid}')
         else:
             #If the song by the selected artist isn't in the database try to find 
             # the same song by a different artist
             # TODO: think about this.
             song = get_song_by_title(title)
-            if song:
+            if song is not None:
                 sid = song.spotify_id
-                current_app.logger.info(f'Found song in database {sid}')
             else:
-                if user_id is not None:
-                    sid_list, spotify = get_spotify_track_id(user_id, title, artist, spotify)
-
-                    
-                    current_app.logger.info(f"located the folling seed ids: {sid_list}")
-                    sid = filter_seeds(sid_list)
-                    current_app.logger.info(f'Found song and artist in spotify {sid}')
-                    new_sids.extend([sid])
-                else:
-                    sid = None
+                tracks = get_spotify_track_id(title, artist)
+                sid_list = [track.get("id") for track in tracks]
+                sid = filter_seeds(sid_list)
+                new_sids.extend([sid])
         if sid is not None:
             sid = sid if isinstance(sid, list) else [sid]
             seed_track_sids.extend(sid)
@@ -57,30 +47,24 @@ def process_seeds(user_id, seeds):
         
 def KNN_recommendations(seed_track_sids, k=10):
     """Get recommendations based on seed tracks.""" 
-    current_app.logger.info(f'Starting recommendation engine with the following seeds: f{seed_track_sids}')
     usable_seeds = filter_for_audio_data(seed_track_sids)
     if len(usable_seeds) == 0:
         #if none of the seeds are usable, select a random usable seed:
         usable_seeds = [get_random_song_id()]
-    current_app.logger.info(f'USABLE seeds: {usable_seeds}')
     songs = get_all_audio_data()
     if k+1 > len(songs):
         k = len(songs) - 1
         if k == 0:
             return []
-    current_app.logger.info(f"retrieved {len(songs)} audio data")
-    current_app.logger.info(f"retrieved all audio data example - {songs[0:2]}")
 
     X = [song[1:] for song in songs]
     y = [song[0] for song in songs]
 
     tree = KDTree(X)
     query_points = [song[1:] for song in songs if song[0] in usable_seeds]
-    current_app.logger.info(f"query points = {query_points}")
     seed_recommendations = []
     for query_point in query_points:
         _, indices = tree.query(query_point, k=k+1)
-        current_app.logger.info(f"recommendation indices = {indices}")
         seed_recommendations.extend([y[i] for i in indices[1:]])
     return list(set(seed_recommendations))
 

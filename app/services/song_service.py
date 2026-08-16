@@ -62,10 +62,11 @@ def get_song_by_title(title: str) -> Song | None:
     ).first()
 
 def get_songs_by_title_and_artist(title: str, artist: str) -> Song:
-    return Song.query.filter(
+    song =  Song.query.filter(
         Song.title == title,
         Song.artist == artist
     ).first()
+    return song
 
 def save_song(SongInfo):
     """Save a song if it does not already exist."""
