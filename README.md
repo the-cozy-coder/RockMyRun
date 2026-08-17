@@ -64,7 +64,3 @@ Used for:
 
 Put the right song at the right point in a run.
 
-## Author
-
-Krista Smith
-PhD Bioinformatics | Data Scientist | Software Engineer
