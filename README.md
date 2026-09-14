@@ -2,6 +2,8 @@
 
 AI-powered music discovery and playlist generation for runners.
 
+![Rock my Run landing page](landingpage.png)
+
 ## Features
 
 - Search for songs by title and artist
